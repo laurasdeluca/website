@@ -293,7 +293,7 @@ const rows=(id,items,reverse=false)=>document.getElementById(id).innerHTML=items
 const awardDetails=[
 ['CMU','Prestigious Gary and Valerie Schaffer Dissertation Fellowship.','www.cmu.edu'],
 ['RSA','Virginia Fox Stern Fellowship for research at Johns Hopkins.','www.rsa.org'],
-['CMU','Humanities Center travel grant for conference presentations.','www.cmu.edu'],
+['CMU','Humanities Center travel grant for a conference presentation.','www.cmu.edu'],
 ['Folger','RaceB4Race travel grant from the Folger Shakespeare Library.','www.folger.edu'],
 ['NEH / NSF','Print & Probability research fellowship on computational bibliography.',''],
 ['CMU','Eberly Center GAITAR grant for research on AI in teaching.','www.cmu.edu'],
