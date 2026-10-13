@@ -302,7 +302,7 @@ const awardDetails=[
 ];
 const awardLogos={
 'A. W. Mellon Digital Humanities Fellowship':['dietrich.jpg','Carnegie Mellon University Dietrich College'],
-'Schaffer Dissertation Fellowship':['https://www.cmu.edu/favicon.ico','Carnegie Mellon University'],
+'Schaffer Dissertation Fellowship':['cmueng.jpeg','Carnegie Mellon University English'],
 'RSA–Virginia Fox Stern Fellowship':['RSA','Renaissance Society of America'],
 'CMU Humanities Center Graduate Conference Grant':['HumanitiesCenter','CMU Humanities Center'],
 'Print & Probability Research Fellowship (NEH and NSF-supported project)':['NEH','National Endowment for the Humanities','NSF','National Science Foundation']
