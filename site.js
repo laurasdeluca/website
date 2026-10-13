@@ -307,7 +307,14 @@ const awardLogos={
 'CMU Humanities Center Graduate Conference Grant':['HumanitiesCenter','CMU Humanities Center'],
 'Print & Probability Research Fellowship (NEH and NSF-supported project)':['NEH','National Endowment for the Humanities','NSF','National Science Foundation']
 };
-document.getElementById('awards-list').innerHTML=DATA.awards.map((p,i)=>{const [label,description,domain]=awardDetails[i]||['Award','Research and professional support.',''];const logos=awardLogos[p[1]];const mark=logos?logos.filter((_,i)=>i%2===0).map((src,i)=>'<img src="'+esc(src)+'" alt="'+esc(logos[i*2+1])+' logo" loading="lazy">').join(''):(domain?'<img src="https://www.google.com/s2/favicons?domain='+esc(domain)+'&amp;sz=128" alt="" loading="lazy">':'<span class="award-monogram">'+esc(label)+'</span>');return '<article class="entry"><div class="award-mark" aria-hidden="true">'+mark+'</div><div class="entry-meta">'+esc(p[0])+'</div><div class="entry-title">'+esc(p[1])+'</div><p class="award-description">'+esc(description)+'</p></article>'}).join('');
+const awardLinks={
+'CMU Humanities Center Graduate Conference Grant':'https://www.cmu.edu/dietrich/humanities-center/blog/lauradeluca.html',
+'Print & Probability Research Fellowship (NEH and NSF-supported project)':'https://printprobability.org/',
+'Bibliographical Society of America Peck-Stacpoole Grant':'https://www.youtube.com/watch?v=OOJCXt-MNMw',
+'GAITAR Grant, Eberly Center':'https://www.cmu.edu/teaching/gaitar/project-descriptions/deluca.html',
+'RSA–Virginia Fox Stern Fellowship':'https://sterncenter.library.jhu.edu/stern-center-fellows/'
+};
+document.getElementById('awards-list').innerHTML=DATA.awards.map((p,i)=>{const [label,description,domain]=awardDetails[i]||['Award','Research and professional support.',''];const logos=awardLogos[p[1]];const mark=logos?logos.filter((_,i)=>i%2===0).map((src,i)=>'<img src="'+esc(src)+'" alt="'+esc(logos[i*2+1])+' logo" loading="lazy">').join(''):(domain?'<img src="https://www.google.com/s2/favicons?domain='+esc(domain)+'&amp;sz=128" alt="" loading="lazy">':'<span class="award-monogram">'+esc(label)+'</span>');const url=awardLinks[p[1]];const title=url?'<a class="award-title-link" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(p[1])+' <span aria-hidden="true">↗</span></a>':esc(p[1]);return '<article class="entry"><div class="award-mark" aria-hidden="true">'+mark+'</div><div class="entry-meta">'+esc(p[0])+'</div><div class="entry-title">'+title+'</div><p class="award-description">'+esc(description)+'</p></article>'}).join('');
 rows('teaching-list',DATA.classes);rows('projects-list',DATA.projects,true);rows('service-list',DATA.service,true);
 document.getElementById('talks-list').innerHTML=DATA.talks.map(p=>`<article class="entry"><div class="entry-title">${esc(p[1])}</div><div class="entry-meta">${esc(p[2])}</div></article>`).join('');
 })();
