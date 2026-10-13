@@ -291,14 +291,14 @@ function renderPubs(cat){const items=DATA.pubs.filter(p=>cat==='All'||p[0]===cat
 document.querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-category]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderPubs(b.dataset.category)}));renderPubs('All');
 const rows=(id,items,reverse=false)=>document.getElementById(id).innerHTML=items.map(p=>`<article class="entry"><div class="entry-title">${esc(p[reverse?0:1])}</div><div class="entry-meta">${esc(p[reverse?1:0])}</div></article>`).join('');
 const awardDetails=[
-['CMU','Carnegie Mellon dissertation fellowship supporting doctoral research.','www.cmu.edu'],
-['RSA','Renaissance Society of America fellowship supporting research in Renaissance studies.','www.rsa.org'],
-['CMU','Humanities Center support for presenting research at an academic conference.','www.cmu.edu'],
-['Folger','Folger Shakespeare Library grant connected to RaceB4Race.','www.folger.edu'],
-['NEH / NSF','Research fellowship on the Print & Probability project, supported by NEH and NSF.',''],
-['CMU','Eberly Center GAITAR grant supporting teaching innovation.','www.cmu.edu'],
-['BSA','Bibliographical Society of America grant supporting bibliographical research.','bibsocamer.org'],
-['Mellon','Digital humanities fellowship supporting interdisciplinary research.','www.mellon.org']
+['CMU','Prestigious Gary and Valerie Schaffer Dissertation Fellowship.','www.cmu.edu'],
+['RSA','Virginia Fox Stern Fellowship for research at Johns Hopkins.','www.rsa.org'],
+['CMU','Humanities Center travel grant for conference presentations.','www.cmu.edu'],
+['Folger','RaceB4Race travel grant from the Folger Shakespeare Library.','www.folger.edu'],
+['NEH / NSF','Print & Probability research fellowship on computational bibliography.',''],
+['CMU','Eberly Center GAITAR grant for research on AI in teaching.','www.cmu.edu'],
+['BSA','Peck-Stacpoole Grant for bibliographical research.','bibsocamer.org'],
+['Mellon','A. W. Mellon fellowship in digital humanities.','www.mellon.org']
 ];
 const awardLogos={
 'A. W. Mellon Digital Humanities Fellowship':['dietrich.jpg','Carnegie Mellon University Dietrich College'],
