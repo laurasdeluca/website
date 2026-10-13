@@ -1,0 +1,56 @@
+name: Publish academic website
+on:
+  push:
+    paths:
+      - 'laura-academic-site-v8.zip'
+      - '.github/workflows/publish-site.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract website and update funding icons
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile, re, shutil
+          root = Path('.')
+          with zipfile.ZipFile('laura-academic-site-v8.zip') as archive:
+              names = archive.namelist()
+              for name in names:
+                  if name.endswith('/') or '..' in Path(name).parts:
+                      continue
+                  filename = Path(name).name
+                  if filename in {'index.html','site.js','headshot.jpg','queen-engraving.jpg','Laura-S-DeLuca-CV.pdf','content.json','vercel.json','README.md'}:
+                      (root/filename).write_bytes(archive.read(name))
+          html = (root/'index.html').read_text()
+          institutions = {
+              'rsa': ('www.rsa.org','Renaissance Society of America'),
+              'saa': ('shakespeareassociation.org','Shakespeare Association of America'),
+              'folger': ('www.folger.edu','Folger Shakespeare Library'),
+              'cmu': ('www.cmu.edu','Carnegie Mellon University'),
+              'eberly': ('www.cmu.edu','CMU Eberly Center'),
+              'neh': ('www.neh.gov','National Endowment for the Humanities')
+          }
+          for key,(domain,label) in institutions.items():
+              pattern = rf'<span class="funding-logo {key}">.*?</span>'
+              image = f'<img class="funding-logo-image" src="https://www.google.com/s2/favicons?domain={domain}&sz=128" alt="{label} website icon" loading="lazy">'
+              html, count = re.subn(pattern,image,html,count=1)
+              if count != 1:
+                  raise RuntimeError(f'Funding item missing: {key}')
+          html = html.replace('<p class="funding-footnote">Institution names shown as text, not official logos. Additional fellowships, including NSF Print/Probability research support, are listed below.</p>', '')
+          html = html.replace('</style>', '.funding-logo-image{display:block;width:52px;height:52px;object-fit:contain;mix-blend-mode:multiply}.funding-item{gap:9px}.funding-grid{gap:25px 19px}</style>', 1)
+          (root/'index.html').write_text(html)
+          PY
+      - name: Commit extracted site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html site.js headshot.jpg queen-engraving.jpg Laura-S-DeLuca-CV.pdf content.json vercel.json README.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish site files and update funding institution icons"
+            git push
+          fi
