@@ -16,7 +16,7 @@ REMOVE={
  'deluca-syllabus-S26.pdf':['Schedule transcribed from the original Spring 2026 course calendar.'],
  'deluca-syllabus-S25.pdf':['Digital illustration reproduced from the original course syllabus (artist and provenance unrecorded).'],
  'deluca-syllabus-S24.pdf':['Canvas supplies readings and due dates; activities are arranged by class date for this portfolio edition.'],
- 'deluca-syllabus-F23.pdf':['Reading-to-meeting allocation is reconstructed for the teaching portfolio; the term dates follow CMU’s official Fall 2023 calendar.']
+ 'deluca-syllabus-F23.pdf':[]
 }
 art=None
 url='https://the-past.com/wp-content/uploads/2022/08/post-1_image0-59.jpg'
@@ -39,6 +39,23 @@ for old,name in MAPPING.items():
                 count+=1
             if rects: page.apply_redactions(images=0,graphics=0)
         if count==0: raise RuntimeError('Missing editorial note in '+name+': '+phrase)
+    if name=='deluca-syllabus-F23.pdf':
+        # The older source and the regenerated PDF use different editor-note wording.
+        # Remove only note blocks on the final two calendar pages, not class content.
+        note_markers=(
+          'reading-to-meeting allocation', 'reading sequence adapted',
+          'meeting-level placement is reconstructed', 'teaching portfolio',
+          'term dates follow cmu', 'portfolio edition'
+        )
+        removed=0
+        for p in [doc[len(doc)-2],doc[len(doc)-1]]:
+            matching=[fitz.Rect(b[:4]) for b in p.get_text('blocks')
+                      if any(marker in b[4].lower() for marker in note_markers)]
+            for box in matching:
+                p.add_redact_annot(box+(-.25,-.25,.25,.25),fill=False,cross_out=False)
+                removed+=1
+            if matching:p.apply_redactions(images=0,graphics=0)
+        print('Removed',removed,'science fiction editorial-note blocks')
     if name=='deluca-syllabus-S24.pdf':
         p=doc[0]
         oldcaption='Lawrence Alma-Tadema, Pastimes in Ancient Egypt 3,000 Years Ago (1863), oil on canvas. Harris Museum and Art Gallery, Preston.'
