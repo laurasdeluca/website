@@ -320,12 +320,12 @@ const awardLinks={
 document.getElementById('awards-list').innerHTML=DATA.awards.map((p,i)=>{const [label,description,domain]=awardDetails[i]||['Award','Research and professional support.',''];const logos=awardLogos[p[1]];const mark=logos?logos.filter((_,i)=>i%2===0).map((src,i)=>'<img src="'+esc(src)+'" alt="'+esc(logos[i*2+1])+' logo" loading="lazy">').join(''):(domain?'<img src="https://www.google.com/s2/favicons?domain='+esc(domain)+'&amp;sz=128" alt="" loading="lazy">':'<span class="award-monogram">'+esc(label)+'</span>');const url=awardLinks[p[1]];const title=url?'<a class="award-title-link" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(p[1])+' <span aria-hidden="true">↗</span></a>':esc(p[1]);return '<article class="entry"><div class="award-mark" aria-hidden="true">'+mark+'</div><div class="entry-meta">'+esc(p[0])+'</div><div class="entry-title">'+title+'</div><p class="award-description">'+esc(description)+'</p></article>'}).join('');
 
 const syllabusLinks = {
-  "Archives and Afterlives: Interpreting Cultural Artifacts in the Digital Age": "Laura-DeLuca-Six-Proofread-Syllabi/deluca-syllabus-F26.pdf",
-  "Gendered Sovereignty: Queenship and Power in Literature and Culture (two sections)": "Laura-DeLuca-Six-Proofread-Syllabi/deluca-syllabus-S26.pdf",
-  "Queenship: Narratives of Power and Identity": "Laura-DeLuca-Six-Proofread-Syllabi/deluca-syllabus-F25.pdf",
-  "Cleopatra’s Cultural Afterlife: Representations of Ancient Egypt in Popular Discourse": "Laura-DeLuca-Six-Proofread-Syllabi/deluca-syllabus-S25.pdf",
-  "Writing about Ancient Egypt (two sections)": "Laura-DeLuca-Six-Proofread-Syllabi/deluca-syllabus-S24.pdf",
-  "Writing about Literature, Art, and Culture: Women in Science Fiction": "Laura-DeLuca-Six-Proofread-Syllabi/deluca-syllabus-F23.pdf"
+  "Archives and Afterlives: Interpreting Cultural Artifacts in the Digital Age": "deluca-syllabus-F26.pdf",
+  "Gendered Sovereignty: Queenship and Power in Literature and Culture (two sections)": "deluca-syllabus-S26.pdf",
+  "Queenship: Narratives of Power and Identity": "deluca-syllabus-F25.pdf",
+  "Cleopatra’s Cultural Afterlife: Representations of Ancient Egypt in Popular Discourse": "deluca-syllabus-S25.pdf",
+  "Writing about Ancient Egypt (two sections)": "deluca-syllabus-S24.pdf",
+  "Writing about Literature, Art, and Culture: Women in Science Fiction": "deluca-syllabus-F23.pdf"
 };
 document.getElementById('teaching-list').innerHTML=DATA.classes.map(([term,name])=>{
   const link=syllabusLinks[name];
