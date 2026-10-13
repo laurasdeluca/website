@@ -279,10 +279,6 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
     [
       "Bridges and Borders Graduate Conference",
       "Co-organizer · 2022–present"
-    ],
-    [
-      "Graduate Mentorship",
-      "Graduate Mentor · 2023–present"
     ]
   ]
 };
