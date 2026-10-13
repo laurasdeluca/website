@@ -305,7 +305,12 @@ const awardDetails=[
 ['BSA','Bibliographical Society of America grant supporting bibliographical research.','bibsocamer.org'],
 ['Mellon','Digital humanities fellowship supporting interdisciplinary research.','www.mellon.org']
 ];
-document.getElementById('awards-list').innerHTML=DATA.awards.map((p,i)=>{const [label,description,domain]=awardDetails[i]||['Award','Research and professional support.',''];const mark=domain?'<img src="https://www.google.com/s2/favicons?domain='+esc(domain)+'&amp;sz=128" alt="" loading="lazy">':'<span class="award-monogram">'+esc(label)+'</span>';return '<article class="entry"><div class="award-mark" aria-hidden="true">'+mark+'</div><div class="entry-meta">'+esc(p[0])+'</div><div class="entry-title">'+esc(p[1])+'</div><p class="award-description">'+esc(description)+'</p></article>'}).join('');
+const awardLogos={
+'RSA–Virginia Fox Stern Fellowship':['ChatGPT%20Image%20Oct%2013%2C%202026%2C%2011_29_58%20AM.png','Renaissance Society of America'],
+'CMU Humanities Center Graduate Conference Grant':['ChatGPT%20Image%20Oct%2013%2C%202026%2C%2011_29_53%20AM.png','CMU Humanities Center'],
+'Print & Probability Research Fellowship (NEH and NSF-supported project)':['ChatGPT%20Image%20Oct%2013%2C%202026%2C%2011_29_45%20AM.png','National Endowment for the Humanities','ChatGPT%20Image%20Oct%2013%2C%202026%2C%2011_29_38%20AM.png','National Science Foundation']
+};
+document.getElementById('awards-list').innerHTML=DATA.awards.map((p,i)=>{const [label,description,domain]=awardDetails[i]||['Award','Research and professional support.',''];const logos=awardLogos[p[1]];const mark=logos?logos.filter((_,i)=>i%2===0).map((src,i)=>'<img src="'+esc(src)+'" alt="'+esc(logos[i*2+1])+' logo" loading="lazy">').join(''):(domain?'<img src="https://www.google.com/s2/favicons?domain='+esc(domain)+'&amp;sz=128" alt="" loading="lazy">':'<span class="award-monogram">'+esc(label)+'</span>');return '<article class="entry"><div class="award-mark" aria-hidden="true">'+mark+'</div><div class="entry-meta">'+esc(p[0])+'</div><div class="entry-title">'+esc(p[1])+'</div><p class="award-description">'+esc(description)+'</p></article>'}).join('');
 rows('teaching-list',DATA.classes);rows('projects-list',DATA.projects,true);rows('service-list',DATA.service,true);
 document.getElementById('talks-list').innerHTML=DATA.talks.map(p=>`<article class="entry"><div class="entry-title">${esc(p[1])}</div><div class="entry-meta">${esc(p[2])}</div></article>`).join('');
 })();
