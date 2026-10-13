@@ -212,7 +212,10 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
       "2025",
       "Folger Shakespeare Library RaceB4Race Grant"
     ],
-    ["2022–present","Print & Probability Research Fellowship (NEH and NSF-supported project)"],
+    [
+      "2022–present",
+      "Print & Probability Research Fellowship (NEH and NSF-supported project)"
+    ],
     [
       "2024–2025",
       "GAITAR Grant, Eberly Center"
@@ -227,10 +230,6 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
     ]
   ],
   "projects": [
-    [
-      "RenAI",
-      "Research collaborator · 2025–present"
-    ],
     [
       "Print and Probability",
       "Research collaborator · 2022–present"
@@ -248,7 +247,7 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
       "Research collaborator · 2023"
     ],
     [
-      "MyScribe AI Writing Tool",
+      "MyProse AI Writing Tool",
       "Research collaborator · 2023"
     ],
     [
@@ -290,6 +289,14 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
 function renderPubs(cat){const items=DATA.pubs.filter(p=>cat==='All'||p[0]===cat);document.getElementById('pub-list').innerHTML=items.map(p=>`<article class="pub"><div class="pub-type">${esc(p[0])}<em>${esc(p[4])}</em></div><div><p class="pub-title">${esc(p[1])}</p><p class="pub-details">${esc(p[2])}</p></div>${p[3]?`<a class="pub-link" href="${esc(p[3])}" target="_blank" rel="noopener" aria-label="Read ${esc(p[1])}">↗</a>`:'<span></span>'}</article>`).join('');document.getElementById('pub-empty').hidden=items.length!==0;}
 document.querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-category]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderPubs(b.dataset.category)}));renderPubs('All');
 const rows=(id,items,reverse=false)=>document.getElementById(id).innerHTML=items.map(p=>`<article class="entry"><div class="entry-title">${esc(p[reverse?0:1])}</div><div class="entry-meta">${esc(p[reverse?1:0])}</div></article>`).join('');
+const projectLinks={
+  "Print and Probability": "https://printprobability.org/",
+  "DREaM — Distant Reading Early Modernity": "https://dream.library.cmu.edu/",
+  "Teaching Statistics Pedagogy Lab": "https://www.cmu.edu/dietrich/statistics-datascience/research/statistical-pedagogy-educational-research.html",
+  "Shakespeare in VR": "https://shakespeare-vr.library.cmu.edu/",
+  "MyProse AI Writing Tool": "https://www.cmu.edu/corecompetencies/communication/resources-and-tools/myprose/index.html",
+  "Docuscope Write and Audit": "https://www.cmu.edu/dietrich/english/research-and-publications/docuscope.html"
+};
 const awardDetails=[
 ['CMU','Prestigious Gary and Valerie Schaffer Dissertation Fellowship.','www.cmu.edu'],
 ['RSA','Virginia Fox Stern Fellowship for research at Johns Hopkins.','www.rsa.org'],
@@ -315,7 +322,7 @@ const awardLinks={
 'RSA–Virginia Fox Stern Fellowship':'https://sterncenter.library.jhu.edu/stern-center-fellows/'
 };
 document.getElementById('awards-list').innerHTML=DATA.awards.map((p,i)=>{const [label,description,domain]=awardDetails[i]||['Award','Research and professional support.',''];const logos=awardLogos[p[1]];const mark=logos?logos.filter((_,i)=>i%2===0).map((src,i)=>'<img src="'+esc(src)+'" alt="'+esc(logos[i*2+1])+' logo" loading="lazy">').join(''):(domain?'<img src="https://www.google.com/s2/favicons?domain='+esc(domain)+'&amp;sz=128" alt="" loading="lazy">':'<span class="award-monogram">'+esc(label)+'</span>');const url=awardLinks[p[1]];const title=url?'<a class="award-title-link" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(p[1])+' <span aria-hidden="true">↗</span></a>':esc(p[1]);return '<article class="entry"><div class="award-mark" aria-hidden="true">'+mark+'</div><div class="entry-meta">'+esc(p[0])+'</div><div class="entry-title">'+title+'</div><p class="award-description">'+esc(description)+'</p></article>'}).join('');
-rows('teaching-list',DATA.classes);rows('projects-list',DATA.projects,true);rows('service-list',DATA.service,true);
+rows('teaching-list',DATA.classes);document.getElementById('projects-list').innerHTML=DATA.projects.map(p=>{const url=projectLinks[p[0]];const title=url?'<a class="project-link" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(p[0])+' <span aria-hidden="true">↗</span></a>':esc(p[0]);return '<article class="entry"><div class="entry-title">'+title+'</div><div class="entry-meta">'+esc(p[1])+'</div></article>'}).join('');rows('service-list',DATA.service,true);
 document.getElementById('talks-list').innerHTML=DATA.talks.map(p=>`<article class="entry"><div class="entry-title">${esc(p[1])}</div><div class="entry-meta">${esc(p[2])}</div></article>`).join('');
 })();
 document.getElementById('year').textContent=new Date().getFullYear();
