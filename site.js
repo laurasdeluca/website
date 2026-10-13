@@ -216,14 +216,7 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
       "2025",
       "GAITAR Grant @Scale"
     ],
-    [
-      "2024–present",
-      "Tartan Research Data Alliance Fellow"
-    ],
-    [
-      "2024",
-      "National Endowment for the Humanities Fellowship"
-    ],
+    ["2022–present","Print & Probability Research Fellowship (NEH and NSF-supported project)"],
     [
       "2024–2025",
       "GAITAR Grant, Eberly Center"
@@ -235,10 +228,6 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
     [
       "2023",
       "A. W. Mellon Digital Humanities Fellowship"
-    ],
-    [
-      "2022–present",
-      "National Science Foundation Early Modern Print/Probability Research Fellow"
     ]
   ],
   "projects": [
@@ -306,17 +295,15 @@ function renderPubs(cat){const items=DATA.pubs.filter(p=>cat==='All'||p[0]===cat
 document.querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-category]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderPubs(b.dataset.category)}));renderPubs('All');
 const rows=(id,items,reverse=false)=>document.getElementById(id).innerHTML=items.map(p=>`<article class="entry"><div class="entry-title">${esc(p[reverse?0:1])}</div><div class="entry-meta">${esc(p[reverse?1:0])}</div></article>`).join('');
 const awardDetails=[
-  ['CMU','Carnegie Mellon dissertation fellowship supporting the completion of doctoral research.','www.cmu.edu'],
-  ['RSA','Renaissance Society of America fellowship supporting research in Renaissance studies.','www.rsa.org'],
-  ['CMU','Humanities Center support for presenting research at an academic conference.','www.cmu.edu'],
-  ['Folger','Folger Shakespeare Library grant connected to the RaceB4Race initiative.','www.folger.edu'],
-  ['CMU','GAITAR @Scale support for pedagogical work through the Eberly Center.','www.cmu.edu'],
-  ['CMU','Fellowship through Carnegie Mellon’s research data community.','www.cmu.edu'],
-  ['NEH','Research support associated with the Print & Probability collaboration.','www.neh.gov'],
-  ['CMU','Eberly Center GAITAR grant supporting teaching innovation.','www.cmu.edu'],
-  ['BSA','Bibliographical Society of America grant supporting bibliographical research.','bibsocamer.org'],
-  ['Mellon','Digital humanities fellowship supporting interdisciplinary research.','www.mellon.org'],
-  ['NSF','Research fellowship associated with the NSF-supported Print & Probability project.','www.nsf.gov']
+['CMU','Carnegie Mellon dissertation fellowship supporting doctoral research.','www.cmu.edu'],
+['RSA','Renaissance Society of America fellowship supporting research in Renaissance studies.','www.rsa.org'],
+['CMU','Humanities Center support for presenting research at an academic conference.','www.cmu.edu'],
+['Folger','Folger Shakespeare Library grant connected to RaceB4Race.','www.folger.edu'],
+['CMU','GAITAR @Scale support for pedagogical work through the Eberly Center.','www.cmu.edu'],
+['NEH / NSF','Research fellowship on the Print & Probability project, supported by NEH and NSF.',''],
+['CMU','Eberly Center GAITAR grant supporting teaching innovation.','www.cmu.edu'],
+['BSA','Bibliographical Society of America grant supporting bibliographical research.','bibsocamer.org'],
+['Mellon','Digital humanities fellowship supporting interdisciplinary research.','www.mellon.org']
 ];
 document.getElementById('awards-list').innerHTML=DATA.awards.map((p,i)=>{const [label,description,domain]=awardDetails[i]||['Award','Research and professional support.',''];const mark=domain?'<img src="https://www.google.com/s2/favicons?domain='+esc(domain)+'&amp;sz=128" alt="" loading="lazy">':'<span class="award-monogram">'+esc(label)+'</span>';return '<article class="entry"><div class="award-mark" aria-hidden="true">'+mark+'</div><div class="entry-meta">'+esc(p[0])+'</div><div class="entry-title">'+esc(p[1])+'</div><p class="award-description">'+esc(description)+'</p></article>'}).join('');
 rows('teaching-list',DATA.classes);rows('projects-list',DATA.projects,true);rows('service-list',DATA.service,true);
