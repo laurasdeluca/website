@@ -301,6 +301,7 @@ const awardDetails=[
 ['Mellon','Digital humanities fellowship supporting interdisciplinary research.','www.mellon.org']
 ];
 const awardLogos={
+'A. W. Mellon Digital Humanities Fellowship':['dietrich.jpg','Carnegie Mellon University Dietrich College'],
 'Schaffer Dissertation Fellowship':['https://www.cmu.edu/favicon.ico','Carnegie Mellon University'],
 'RSA–Virginia Fox Stern Fellowship':['RSA','Renaissance Society of America'],
 'CMU Humanities Center Graduate Conference Grant':['HumanitiesCenter','CMU Humanities Center'],
