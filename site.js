@@ -274,7 +274,7 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
     ],
     [
       "Women Writers Project, Northeastern University",
-      "Professional service · 2023–present"
+      "Professional service · 2023"
     ],
     [
       "Bridges and Borders Graduate Conference",
