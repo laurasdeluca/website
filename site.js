@@ -301,6 +301,7 @@ const awardDetails=[
 ['Mellon','Digital humanities fellowship supporting interdisciplinary research.','www.mellon.org']
 ];
 const awardLogos={
+'Schaffer Dissertation Fellowship':['https://www.cmu.edu/favicon.ico','Carnegie Mellon University'],
 'RSA–Virginia Fox Stern Fellowship':['RSA','Renaissance Society of America'],
 'CMU Humanities Center Graduate Conference Grant':['HumanitiesCenter','CMU Humanities Center'],
 'Print & Probability Research Fellowship (NEH and NSF-supported project)':['NEH','National Endowment for the Humanities','NSF','National Science Foundation']
