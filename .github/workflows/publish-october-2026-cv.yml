@@ -1,0 +1,47 @@
+name: Publish updated October 2026 CV
+on:
+  push:
+    paths:
+      - 'DeLuca-CV-Oct-2026.pdf'
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  publish-cv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify CV and switch both download links
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          pdf = Path("DeLuca-CV-Oct-2026.pdf")
+          if not pdf.is_file() or pdf.stat().st_size < 1000:
+              raise SystemExit("Upload the actual October 2026 CV PDF at the repository root first.")
+          with pdf.open("rb") as f:
+              if f.read(5) != b"%PDF-":
+                  raise SystemExit("The uploaded CV is not a valid PDF.")
+          page = Path("index.html")
+          text = page.read_text(encoding="utf-8")
+          old = "DeLuca-CV-2026%20(5).pdf"
+          new = "DeLuca-CV-Oct-2026.pdf"
+          number = text.count(old)
+          if number == 0 and text.count(new) == 2:
+              print("Both CV buttons already link to the October PDF.")
+          elif number == 2:
+              text = text.replace(old, new)
+              page.write_text(text, encoding="utf-8")
+              print("Updated both CV download links.")
+          else:
+              raise SystemExit(f"Unexpected CV link state: old={number}, new={text.count(new)}")
+          PY
+      - name: Publish updated link
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Link both CV buttons to October 2026 curriculum vitae"
+            git push
+          fi
