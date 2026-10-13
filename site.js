@@ -212,10 +212,6 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
       "2025",
       "Folger Shakespeare Library RaceB4Race Grant"
     ],
-    [
-      "2025",
-      "GAITAR Grant @Scale"
-    ],
     ["2022–present","Print & Probability Research Fellowship (NEH and NSF-supported project)"],
     [
       "2024–2025",
@@ -299,7 +295,6 @@ const awardDetails=[
 ['RSA','Renaissance Society of America fellowship supporting research in Renaissance studies.','www.rsa.org'],
 ['CMU','Humanities Center support for presenting research at an academic conference.','www.cmu.edu'],
 ['Folger','Folger Shakespeare Library grant connected to RaceB4Race.','www.folger.edu'],
-['CMU','GAITAR @Scale support for pedagogical work through the Eberly Center.','www.cmu.edu'],
 ['NEH / NSF','Research fellowship on the Print & Probability project, supported by NEH and NSF.',''],
 ['CMU','Eberly Center GAITAR grant supporting teaching innovation.','www.cmu.edu'],
 ['BSA','Bibliographical Society of America grant supporting bibliographical research.','bibsocamer.org'],
