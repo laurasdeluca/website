@@ -57,11 +57,32 @@
 @media(max-width:740px){
   .hero-inner .portrait{width:min(100%,360px);height:430px;object-fit:cover;object-position:center 27%;justify-self:center}
 }
-.funding-grid .funding-logo-image[src="humanities-center-cropped.svg"]{
-  display:block;width:122px;max-width:100%;height:76px;object-fit:contain;object-position:left center;
-  margin:0;padding:0;mix-blend-mode:normal
+/* Equal square logo tiles keep Humanities Center and RaceB4Race aligned. */
+.funding-grid .funding-item > img.funding-logo-image{
+  display:block;
+  box-sizing:border-box;
+  width:76px;
+  height:76px;
+  max-width:76px;
+  min-width:76px;
+  min-height:76px;
+  object-fit:contain;
+  object-position:center center;
+  background:#fff;
+  border:1px solid #d1dbd0;
+  border-radius:4px;
+  padding:5px;
+  margin:0;
+  mix-blend-mode:normal;
 }
-.funding-grid .funding-item{justify-content:flex-start}
+.funding-grid .funding-item > img.funding-logo-image[src="humanities-center-cropped.svg"]{
+  width:76px;
+  height:76px;
+  max-width:76px;
+  object-position:center center;
+}
+.funding-grid .funding-item{justify-content:flex-start;align-items:flex-start;gap:9px}
+.funding-grid .funding-item > span{display:block;margin-top:0}
 #cv .container{text-align:center}
 #cv .container>p{max-width:760px;margin-left:auto;margin-right:auto}
 #cv .container>.button{margin:8px auto 3px}
