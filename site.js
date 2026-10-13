@@ -305,7 +305,21 @@ const menu=document.getElementById('menu-toggle');menu.addEventListener('click',
 function renderPubs(cat){const items=DATA.pubs.filter(p=>cat==='All'||p[0]===cat);document.getElementById('pub-list').innerHTML=items.map(p=>`<article class="pub"><div class="pub-type">${esc(p[0])}<em>${esc(p[4])}</em></div><div><p class="pub-title">${esc(p[1])}</p><p class="pub-details">${esc(p[2])}</p></div>${p[3]?`<a class="pub-link" href="${esc(p[3])}" target="_blank" rel="noopener" aria-label="Read ${esc(p[1])}">↗</a>`:'<span></span>'}</article>`).join('');document.getElementById('pub-empty').hidden=items.length!==0;}
 document.querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-category]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderPubs(b.dataset.category)}));renderPubs('All');
 const rows=(id,items,reverse=false)=>document.getElementById(id).innerHTML=items.map(p=>`<article class="entry"><div class="entry-title">${esc(p[reverse?0:1])}</div><div class="entry-meta">${esc(p[reverse?1:0])}</div></article>`).join('');
-rows('awards-list',DATA.awards);rows('teaching-list',DATA.classes);rows('projects-list',DATA.projects,true);rows('service-list',DATA.service,true);
+const awardDetails=[
+  ['CMU','Carnegie Mellon dissertation fellowship supporting the completion of doctoral research.','www.cmu.edu'],
+  ['RSA','Renaissance Society of America fellowship supporting research in Renaissance studies.','www.rsa.org'],
+  ['CMU','Humanities Center support for presenting research at an academic conference.','www.cmu.edu'],
+  ['Folger','Folger Shakespeare Library grant connected to the RaceB4Race initiative.','www.folger.edu'],
+  ['CMU','GAITAR @Scale support for pedagogical work through the Eberly Center.','www.cmu.edu'],
+  ['CMU','Fellowship through Carnegie Mellon’s research data community.','www.cmu.edu'],
+  ['NEH','Research support associated with the Print & Probability collaboration.','www.neh.gov'],
+  ['CMU','Eberly Center GAITAR grant supporting teaching innovation.','www.cmu.edu'],
+  ['BSA','Bibliographical Society of America grant supporting bibliographical research.','bibsocamer.org'],
+  ['Mellon','Digital humanities fellowship supporting interdisciplinary research.','www.mellon.org'],
+  ['NSF','Research fellowship associated with the NSF-supported Print & Probability project.','www.nsf.gov']
+];
+document.getElementById('awards-list').innerHTML=DATA.awards.map((p,i)=>{const [label,description,domain]=awardDetails[i]||['Award','Research and professional support.',''];const mark=domain?'<img src="https://www.google.com/s2/favicons?domain='+esc(domain)+'&amp;sz=128" alt="" loading="lazy">':'<span class="award-monogram">'+esc(label)+'</span>';return '<article class="entry"><div class="award-mark" aria-hidden="true">'+mark+'</div><div class="entry-meta">'+esc(p[0])+'</div><div class="entry-title">'+esc(p[1])+'</div><p class="award-description">'+esc(description)+'</p></article>'}).join('');
+rows('teaching-list',DATA.classes);rows('projects-list',DATA.projects,true);rows('service-list',DATA.service,true);
 document.getElementById('talks-list').innerHTML=DATA.talks.map(p=>`<article class="entry"><div class="entry-title">${esc(p[1])}</div><div class="entry-meta">${esc(p[2])}</div></article>`).join('');
 })();
 document.getElementById('year').textContent=new Date().getFullYear();
