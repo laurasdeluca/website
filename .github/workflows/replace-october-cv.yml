@@ -1,0 +1,85 @@
+name: Publish corrected October 2026 CV
+on:
+  push:
+    paths:
+      - '.github/workflows/replace-october-cv.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update-cv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PDF tools
+        run: |
+          python -m pip install 'PyMuPDF>=1.24,<2'
+          if ! command -v zstd >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq zstd
+          fi
+      - name: Apply uploaded CV's updated page content
+        run: |
+          python - <<'PY'
+          import base64, hashlib, os, subprocess, tempfile
+          from pathlib import Path
+          import fitz
+
+          cv = Path('DeLuca-CV-Oct-2026.pdf')
+          old_checksum = '1702b84682649eee8fbe92c97e99c99bdd4ea0538b913a88a18e1c47efd86d3b'
+          new_page_stream_checksum = '32a2a75348c399544b4fec3bdfa8706a565b5c415c0af5195ac98184d9570aed'
+          patch_base64 = (
+            'KLUv/WRQ2GUHANJGDgnAO+E2JdeqWAUkZUDvopEygDft+XPwYA7l1INj61EDKEcNQtXIUjkibhkn+8VldqGgPrHUp44NRTqgkFiNMhzxjZAIFBNb7AHP5NsUfcjgXP59l08c7iFUFUltyz9K/kVYEe7/kf+Iq1n663Y11H9f/GnOv4z285G/ncoW+rk0VSdojUzHHf890EwwslFAyoaxOzh+FQeZ6VWlanSjUx8nJg/OQpvUpki6IIoKSoLm3RsUrDXyAFqBL1a1hmgvSAbi9SYKBbRFvY6H+4XBB/hRcnFo/nkvCZpFa0z48/mmGTXWFuTePRIBMtTT8A=='
+          )
+          assert cv.is_file()
+          original_bytes = cv.read_bytes()
+          if hashlib.sha256(original_bytes).hexdigest() != old_checksum:
+              doc = fitz.open(cv)
+              if ('Co-coordinator, Ohio Valley Shakespeare Conference' in doc[7].get_text()
+                  and len(doc) == 9):
+                  print('October CV is already updated.')
+                  raise SystemExit(0)
+              raise SystemExit('CV changed unexpectedly; refusing to overwrite it.')
+
+          doc = fitz.open(cv)
+          assert len(doc) == 9
+          page = doc[7]
+          xref = page.get_contents()[0]
+          old_stream = doc.xref_stream(xref)
+          assert hashlib.sha256(old_stream).hexdigest() == 'd9ccba12182661c97408e785a902548f3bebce131986374dfedfee5cb51470d9'
+          with tempfile.TemporaryDirectory() as d:
+              old_file = Path(d) / 'old-stream.bin'
+              patch_file = Path(d) / 'cv-patch.zst'
+              new_file = Path(d) / 'new-stream.bin'
+              old_file.write_bytes(old_stream)
+              patch_file.write_bytes(base64.b64decode(patch_base64))
+              subprocess.run(['zstd', '-q', '-d', '--patch-from=' + str(old_file),
+                              str(patch_file), '-o', str(new_file)], check=True)
+              new_stream = new_file.read_bytes()
+              assert hashlib.sha256(new_stream).hexdigest() == new_page_stream_checksum
+              doc.update_stream(xref, new_stream)
+              target = Path(d) / 'updated-cv.pdf'
+              doc.save(target, garbage=4, deflate=True)
+              verified = fitz.open(target)
+              assert len(verified) == 9
+              text = verified[7].get_text()
+              assert 'Co-coordinator, Ohio Valley Shakespeare Conference' in text
+              assert 'October 2026' in text
+              assert 'Chair, Early Modern Women: Figures, Labors, Afterlives' not in text
+              verified.close()
+              doc.close()
+              os.replace(target, cv)
+          print('Published new October CV with all nine pages preserved.')
+          PY
+      - name: Commit replacement CV
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add DeLuca-CV-Oct-2026.pdf
+          if ! git diff --cached --quiet; then
+            git commit -m "Update October 2026 CV with conference co-coordinator role"
+            git push
+          fi
