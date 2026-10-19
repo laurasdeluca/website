@@ -1,0 +1,92 @@
+name: Publish newest October 2026 CV
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-newest-october-cv.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update-cv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PDF tools
+        run: |
+          python -m pip install 'PyMuPDF>=1.24,<2'
+          if ! command -v zstd >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq zstd
+          fi
+      - name: Apply newest CV version
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, os, subprocess, tempfile
+          import fitz
+
+          pdf=Path('DeLuca-CV-Oct-2026.pdf')
+          doc=fitz.open(pdf)
+          assert len(doc)==9, 'Expected nine CV pages'
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          expected_old='bf3b59b174fffbe96086860f5d3d9eaf6d78a6c220883f22d746e6282d22408a'
+          expected_new='84ba7f8a264be24a55752b16f5091119f0886e76bafc90f57e19e8b94919b97a'
+          other_hashes=[
+            'feb7f044f57122378a7190bced70cd83a1d2f9ab6030acdae273f2aa92fb7a50',
+            '1653e04d80082871123a31fc073c64ee777130de625af10043e48b57d87695c5',
+            '52aef0fdf35e19b320915fac010108d6825f983cd9b97188201beaad52c40e5c',
+            'f188c4a874544ba5d3c05ca9c1f4d3e4326e98c066cee482ff28a3af8e4bbe33',
+            'f9c56af8f3698fbe478ff71d7d9330f3fabafdd858a76166e9c5c2c0101e5715',
+            '840516c530769d05161822c2a15ac70e0c099d152a6e5887038076cd12abed1f',
+            'b4bd9b083668d4037c9ca405d604cc76d10c3e45ad5f9c080fe6ab7c8b1e84dd',
+            '523ed96fedbd0fe9d71b10c32858ca8e9d74874dd3149de7cbfa8e314f0f52df'
+          ]
+          for i, expected in enumerate(other_hashes, 1):
+              p=doc[i]
+              stream=b''.join(doc.xref_stream(x) for x in p.get_contents())
+              assert sha(stream)==expected, f'Page {i+1} differs from uploaded version'
+          page=doc[0]
+          xrefs=page.get_contents()
+          assert len(xrefs)==1
+          old_stream=doc.xref_stream(xrefs[0])
+          state=sha(old_stream)
+          if state==expected_new:
+              print('Newest CV already published.')
+              raise SystemExit(0)
+          assert state==expected_old, 'Current CV page 1 is different than expected'
+          patch_b64='KLUv/aTrHwEADQQA+DYxNDcxMDU0NzAxMzE2MDA4NDFCMTc1ODkuNzMuMjYcAP5s9w+tg1WHDu+rf+hpHEBp6h/6hBsQzYAgAp0fepngBAQK+KhjVFkQMeITWoUEEmQ/9AoI0CtAighQRmD/0JRIgGIEKC6QMgRoYzA1BKgI7B86HRiPbx3Bt+g/eA0EiWj+EA=='
+          patch=base64.b64decode(patch_b64,validate=True)
+          assert sha(patch)=='46a7d9d06be4bf1b8258d219ef6b74df3a2169cff88e61bd556dd5010098903f'
+          with tempfile.TemporaryDirectory() as tmp:
+              temp=Path(tmp)
+              (temp/'before.bin').write_bytes(old_stream)
+              (temp/'patch.zst').write_bytes(patch)
+              subprocess.run(['zstd','-q','-d','--patch-from='+str(temp/'before.bin'),
+                              str(temp/'patch.zst'),'-o',str(temp/'after.bin')],check=True)
+              updated=(temp/'after.bin').read_bytes()
+              assert sha(updated)==expected_new, 'New page differs from uploaded CV'
+              doc.update_stream(xrefs[0],updated)
+              staged=temp/'updated.pdf'
+              doc.save(staged,garbage=4,deflate=True)
+              doc.close()
+              check=fitz.open(staged)
+              assert len(check)==9
+              assert sha(check.xref_stream(check[0].get_contents()[0]))==expected_new
+              assert 'Laura S. DeLuca' in check[0].get_text()
+              assert 'Co-coordinator, Ohio Valley Shakespeare Conference' in check[7].get_text()
+              check.close()
+              os.replace(staged,pdf)
+          print('Published newest uploaded nine-page CV, preserving layout and public CV URL.')
+          PY
+      - name: Commit updated CV to website
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add DeLuca-CV-Oct-2026.pdf
+          if ! git diff --cached --quiet; then
+            git commit -m "Replace website CV with latest uploaded October version"
+            git push
+          fi
